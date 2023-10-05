@@ -1,7 +1,9 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const inter = Inter({ subsets: ['latin'] })
+import UserProvider from '@/providers/userProvider';
 
 export const metadata = {
   title: 'Create Next App',
@@ -9,9 +11,24 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+
+
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+      <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+  crossOrigin="anonymous"
+/>
+      </head>
+
+      <body className={inter.className}>
+        <UserProvider>
+        {children}
+        </UserProvider>
+        </body>
     </html>
   )
 }

@@ -16,14 +16,19 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { UserContext } from '@/providers/userProvider';
 import { useRouter } from 'next/navigation'
-
+import {loadStripe} from '@stripe/stripe-js';
+import Link from 'next/link';
 
 function Dashboard() {
   const router = useRouter()
 
+
+  const[price, setPrice] = useState(0);
   const [show, setShow] = useState(false);
   const {user} = React.useContext(UserContext);
   console.log(" users data", user);
+
+
 
   
    
@@ -55,17 +60,40 @@ function Dashboard() {
     setChooser(items)
   }
 
+  const makepayment = async (e) => {
+     e.preventDefault();
+     const price = e.target.id;
+    const stripe = await loadStripe("pk_test_51Nxt8KSDfcGF2ukLUo5tThJSiA8nBfbMl4YKjlpmlPqfMIqdL8tzxRTZUGGNnOKXA2s9oknJCjAQafLnED7uKGME004L0y4SZJ")
+    const itemId = items.filter((item) => item.id == price);
+     const response = await axios.post('http://localhost:3000/payment', {
+         item: JSON.stringify(itemId)
+           }).then((response) => { console.log(response);} , (error) => {console.log(error)
+            });
+      
+        const session =  response;
+
+        const result =  stripe.redirectToCheckout({ sessionId: session.id });
+        if (result.error) {
+          console.log(result.error.message);
+        }
+   
+
+    
+  }
+
+
   
     const [items, setItems] = React.useState([]);
+
+   
     const [chooser, setChooser] = React.useState(items);
     React.useEffect(() => {
         setChooser(items)
     },[items]);
     React.useEffect(() => {
-    // write a axios request to get the data from the backend
         axios.get('http://localhost:3000/routes/products')
         .then((response) => {
-      console.log(response.data);
+      console.log(response.data)  ;
       setItems(response.data);
         })
 .catch((error) => {
@@ -92,10 +120,10 @@ function Dashboard() {
             navbarScroll
           >
             <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">lisings</Nav.Link>
+            <Nav.Link href="/addListing">Add Listing</Nav.Link>
             <Nav.Link href="#action2">Wallet</Nav.Link>
-            <Nav.Link href="#action2">My Profile</Nav.Link>
-
+            <Link href="/profile" style={{textDecoration: "none", color : "grey"}}>My Profile</Link>
+            
 
 
           </Nav>
@@ -183,8 +211,8 @@ function Dashboard() {
               <ListGroup className="list-group-flush">
                     <ListGroup.Item>{item.category}</ListGroup.Item>
                     <ListGroup.Item>{item.price}</ListGroup.Item>
-                    <ListGroup.Item><Card.Text> {Array.from(item.description).splice(0,40).join('')+'...'} </Card.Text></ListGroup.Item>
-                    <Button variant="primary">Buy</Button>
+                    <ListGroup.Item><Card.Text> { item.description ? Array.from(item.description).slice(0, 100).join("") + "..." : "No description" } </Card.Text></ListGroup.Item>
+                    <Button variant="primary" id={item.id} onClick={makepayment}>Buy</Button>
                 </ListGroup>
 
             </Card.Body>

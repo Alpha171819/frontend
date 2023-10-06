@@ -5,7 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: skyblue;
+    background-image: url(https://img.freepik.com/free-vector/ecommerce-web-store-hand-drawn-illustration_107791-10966.jpg);
     height: 100vh;
 }
 
@@ -15,7 +15,7 @@
     flex-direction: column;
     height: 90vh;
     padding: 40px;
-    background: white;
+    background: rgb(238, 236, 236);
     border-radius: 15px;
 }
 

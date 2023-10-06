@@ -4,18 +4,14 @@ import axios from 'axios';
 import styles from '../login/page.module.css'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import { use, useEffect } from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
+
 
 import React from 'react';
-import e from 'cors';
 
 
 
 function AddListings() {
 
- // create state variables for each input
   const [catogaory, setCatogaory] = React.useState('');
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
